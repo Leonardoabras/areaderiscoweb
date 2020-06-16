@@ -9,7 +9,7 @@ import Footer from '../../components/Footer';
 import { FaArrowLeft } from 'react-icons/fa';
 import { FiLogIn } from 'react-icons/fi';
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   return (
     <>
       <Nav>
@@ -25,15 +25,10 @@ const Login: React.FC = () => {
       <main style={{ display: 'flex', flexDirection: 'column' }}>
         <FormSection>
           <div className="title">
-            <h1>Registrar</h1>
+            <h1>Logar</h1>
           </div>
           <form>
             <div className="fieldGroup">
-              <div className="fieldItem">
-                <label htmlFor="name">Nome</label>
-                <input type="text" name="name" />
-              </div>
-
               <div className="fieldItem">
                 <label htmlFor="name">E-mail</label>
                 <input type="text" name="email"/>
@@ -44,15 +39,10 @@ const Login: React.FC = () => {
                 <input type="password" name="password"/>
               </div>
 
-              <div className="fieldItem">
-                <label htmlFor="name">Confirme sua senha</label>
-                <input type="password" name="cpassword"/>
-              </div>
-
-              <button type="submit">Enviar</button>
+              <button type="submit">Entrar</button>
             </div>
-            <Link to="/login">
-              <span>Fazer login</span>
+            <Link to="/register">
+              <span>Fazer Cadastro</span>
               <FiLogIn size={20} />
             </Link>
           </form>
@@ -63,4 +53,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;

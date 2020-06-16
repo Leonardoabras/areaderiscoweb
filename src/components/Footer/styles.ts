@@ -6,6 +6,8 @@ export const FooterContainer = styled.div`
 
   padding-top: 20px;
   padding-bottom: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
 
   width: 100%;
 

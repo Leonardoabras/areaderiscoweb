@@ -18,7 +18,7 @@ const Home: React.FC = () => {
         <div id="title">
           <h1>Área de risco</h1>
         </div>
-        <Redirectbutton to="register">Login</Redirectbutton>
+        <Redirectbutton to="login">Login</Redirectbutton>
         <Redirectbutton to="register">Registrar</Redirectbutton>
       </Nav>
       <main>
@@ -35,12 +35,12 @@ const Home: React.FC = () => {
 
           <div className="map-container">
             <Map
-              center={[-16.9526873, -51.799464]}
+              center={[-19.9419331, -44.262343]}
               style={{
                 width: '100%',
                 height: '100%'
               }}
-              zoom={15}>
+              zoom={12}>
               <TileLayer
                 attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
