@@ -1,11 +1,26 @@
 import styled from 'styled-components';
 
+import { Link } from 'react-router-dom';
+
+export const Redirectbutton = styled(Link)`
+  background: #fac960;
+  color: #fff;
+  text-decoration: none;
+  margin: 6px;
+  align-self: center;
+  padding: 10px 30px;
+
+  &&:hover {
+    background: #E0AC3A;
+  }
+`;
+
 export const Nav = styled.div`
   display: flex;
 
   align-content: center;
 
-  padding: 10px 40px;
+  padding: 10px 10%;
 
   img {
     width: 64px;
@@ -15,6 +30,8 @@ export const Nav = styled.div`
   div#title {
     margin-left: 16px;
     align-self: center;
+
+    flex: 1;
   }
 `;
 
@@ -50,10 +67,6 @@ export const Search = styled.div`
       font-size: 16px;
     }
 
-    input:focus {
-      outline: none;
-    }
-
     button {
       width: 20%;
       background: #E0AC3A;
@@ -62,14 +75,14 @@ export const Search = styled.div`
       font-weight: 600;
       border: none;
       cursor: pointer;
-    }
 
-    button:focus {
-      outline: none;
-    }
+      &:focus {
+        outline: none;
+      }
 
-    button:hover {
-      background: #BA871A;
+      &:hover {
+        background: #BA871A;
+      }
     }
   }
 `;
