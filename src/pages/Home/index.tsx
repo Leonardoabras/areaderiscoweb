@@ -205,19 +205,19 @@ const Home: React.FC = () => {
 
           <div className="newsBlock">
             <div className="news">
-              <span>Defesa civil emite alertas para chuvas isoladas.</span>
-              <p>Órgão municipal também divulgou algumas dicas importantes com procedimentos a serem tomados e evitados em caso de chuvas fortes.</p>
-              <a href="##">Ler mais</a>
+              <span>Moradores do Citrolândia, em Betim, ganharão bacia de detenção</span>
+              <p>Estrutura às margens da 381 terá capacidade para reter 95 milhões de litros de água.</p>
+              <a href="https://www.otempo.com.br/o-tempo-betim/moradores-do-citrolandia-em-betim-ganharao-bacia-de-detencao-1.2348238">Ler mais</a>
             </div>
             <div className="news">
-              <span>Uso de máscaras passa a ser obrigatório em Betim partir de hoje</span>
-              <p>Prefeito afirma que adesão da população é essencial para aretomada das atividades no município; Apromiv vai dobrar a produção nos próximos dias</p>
-              <a href="##">Ler mais</a>
+              <span>Covid-19: Betim prorroga novamente o reinício das aulas presenciais</span>
+              <p>Pelo decreto municipal, as escolas e os centros infantis municipais, fechados desde o dia 18 de março, ficariam sem aulas até o dia 30 de junho; data da suspensão pode ser mais uma vez estendida.</p>
+              <a href="https://www.otempo.com.br/o-tempo-betim/betim-investe-em-melhorias-na-sinalizacao-de-transito-do-hipercentro-1.2346048">Ler mais</a>
             </div>
             <div className="news">
-              <span>Corona Vírus: Primeiro mês do isolamento social em BH evitou 200 mortes</span>
-              <p>Com o isolamento social, surgiram cenas até então inéditas: ruas vazias e pessoas usando máscaras</p>
-              <a href="##">Ler mais</a>
+              <span>Betim investe em melhorias na sinalização de trânsito do hipercentro</span>
+              <p>Vias receberão instalação de placas e troca de semáforos; ondulações na avenida Amazonas serão retiradas.</p>
+              <a href="https://www.otempo.com.br/o-tempo-betim/betim-investe-em-melhorias-na-sinalizacao-de-transito-do-hipercentro-1.2346048">Ler mais</a>
             </div>
           </div>
         </News>
