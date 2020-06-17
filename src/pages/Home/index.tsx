@@ -1,30 +1,46 @@
-import React,{useEffect, useState} from 'react';
+import React,{useEffect, useState, FormEvent, ChangeEvent} from 'react';
 import {useAuth} from '../../hooks/AuthContext';
 import { Map, TileLayer,Marker, Popup , } from 'react-leaflet';
 import L from 'leaflet';
 import { Search, MapSection, News, Redirectbutton } from './styles';
 import { FiLogOut, FiUser, FiTarget } from 'react-icons/fi';
-
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
+
 import api from '../../services/api';
 import chuvaIcon from '../../assets/umbrella.png';
 import desastreIcon from '../../assets/desastre.png';
 import riskIcon from '../../assets/risk.png';
 import myLocationIcon from '../../assets/pin.png';
+import axios from 'axios';
 
 interface Risk{
   id:number,
   latitude:number,
   longitude:number,
   risk:string,
+  local:string
 }
 
 const Home: React.FC = () => {
   const {user, signOut} = useAuth();
+
   const [myPosition, setMyPosition] = useState<[number,number]>([0,0]);
+  const [zoom, setZoom] = useState<number>(12);
+  const [betimPosition, setBetimPosition] = useState<[number,number]>([-19.9419331, -44.262343]);
   const [risks, setRisks] = useState<Risk []>([]);
 
+  const [searchForm, setSearchForm] = useState<string>('');
+
+  const handleDataInput = (event: ChangeEvent<HTMLInputElement>) => {
+     setSearchForm(event.target.value);
+  };
+
+
+  const myLocation = L.icon({
+    iconUrl: myLocationIcon,
+    iconSize: [55,55]
+  });
 
   useEffect(()=>{
     navigator.geolocation.getCurrentPosition(position =>{
@@ -36,15 +52,29 @@ const Home: React.FC = () => {
 
 
   useEffect(()=>{
-    api.get('location').then(response =>{
+   api.get('location').then(response =>{
       setRisks(response.data);
     });
   },[]);
 
-  const myLocation = L.icon({
-    iconUrl: myLocationIcon,
-    iconSize: [55,55]
-  });
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+
+    if(searchForm.length !== 9){
+
+      return alert('CEP invalido');
+    }
+
+    axios.get(`https://geocode.xyz/${searchForm}?json=8503316457244f98bc7852654e24858e`)
+    .then(response => {
+      console.log(response.data);
+      const {latt, longt} = response.data;
+      setBetimPosition([latt, longt]);
+      setZoom(13);
+    });
+
+  };
 
   function iconPoint(icon:string){
     const size: [number,number] = [50,50];
@@ -94,8 +124,14 @@ const Home: React.FC = () => {
       <main>
         <Search>
           <span>Saiba se você está em uma área de risco com apenas um passo.</span>
-          <form>
-            <input placeholder="Busque pelo seu CEP" />
+          <form onSubmit={handleSubmit}>
+            <input
+              placeholder="Busque pelo seu CEP"
+              maxLength={9}
+              type="text"
+              value={searchForm}
+              onChange={handleDataInput}
+            />
             <button type="submit">Buscar</button>
           </form>
         </Search>
@@ -105,12 +141,13 @@ const Home: React.FC = () => {
 
           <div className="map-container">
             <Map
-              center={[-19.9419331, -44.262343]}
+              center={betimPosition}
               style={{
                 width: '100%',
                 height: '100%'
               }}
-              zoom={12}>
+              zoom={zoom}
+            >
               <TileLayer
                 attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -127,7 +164,11 @@ const Home: React.FC = () => {
                     icon = {
                       iconPoint(risk.risk.toLocaleLowerCase())
                     }>
-                      <Popup> Atualizo 6666</Popup>
+                      <Popup>
+                      <strong>Local:</strong> {risk.local}
+                        <br/>
+                        <strong>Risco: </strong>{risk.risk.toUpperCase()}
+                      </Popup>
                     </Marker>
                   )
                 )
