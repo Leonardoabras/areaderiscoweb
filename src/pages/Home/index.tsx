@@ -2,16 +2,17 @@ import React,{useEffect, useState, FormEvent, ChangeEvent} from 'react';
 import {useAuth} from '../../hooks/AuthContext';
 import { Map, TileLayer,Marker, Popup , } from 'react-leaflet';
 import L from 'leaflet';
-import { Nav, Search, MapSection, News, Redirectbutton } from './styles';
-import { FiLogOut, FiUser } from 'react-icons/fi';
-import axios from 'axios';
+import { Search, MapSection, News, Redirectbutton } from './styles';
+import { FiLogOut, FiUser, FiTarget } from 'react-icons/fi';
+import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
+
 import api from '../../services/api';
-import logo from '../../assets/globe.png';
 import chuvaIcon from '../../assets/umbrella.png';
 import desastreIcon from '../../assets/desastre.png';
 import riskIcon from '../../assets/risk.png';
 import myLocationIcon from '../../assets/pin.png';
+import axios from 'axios';
 
 interface Risk{
   id:number,
@@ -22,7 +23,6 @@ interface Risk{
 }
 
 const Home: React.FC = () => {
-
   const {user, signOut} = useAuth();
 
   const [myPosition, setMyPosition] = useState<[number,number]>([0,0]);
@@ -54,7 +54,7 @@ const Home: React.FC = () => {
   useEffect(()=>{
    api.get('location').then(response =>{
       setRisks(response.data);
-    })
+    });
   },[]);
 
 
@@ -105,11 +105,7 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Nav>
-        <img src={logo} alt="Area de risco" />
-        <div id="title">
-          <h1>Área de risco</h1>
-        </div>
+      <NavBar>
         {
           !user ? (
             <>
@@ -119,18 +115,18 @@ const Home: React.FC = () => {
           ) : (
             <>
               <Redirectbutton to="register">{user.name}<FiUser /></Redirectbutton>
-              <Redirectbutton to="register">Registrar Area de Risco</Redirectbutton>
+              <Redirectbutton to="/register/target">Registrar Area de Risco<FiTarget /></Redirectbutton>
               <Redirectbutton to="/" onClick={signOut}>Logout<FiLogOut /></Redirectbutton>
             </>
           )
         }
-      </Nav>
+      </NavBar>
       <main>
         <Search>
           <span>Saiba se você está em uma área de risco com apenas um passo.</span>
           <form onSubmit={handleSubmit}>
             <input
-              placeholder="Busque pelo endereço"
+              placeholder="Busque pelo seu CEP"
               maxLength={9}
               type="text"
               value={searchForm}
