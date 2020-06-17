@@ -1,7 +1,9 @@
 import React,{useEffect, useState} from 'react';
+import {useAuth} from '../../hooks/AuthContext';
 import { Map, TileLayer,Marker, Popup , } from 'react-leaflet';
 import L from 'leaflet';
 import { Nav, Search, MapSection, News, Redirectbutton } from './styles';
+import { FiLogOut, FiUser } from 'react-icons/fi';
 
 import Footer from '../../components/Footer';
 import api from '../../services/api';
@@ -20,6 +22,7 @@ interface Risk{
 
 const Home: React.FC = () => {
 
+  const {user, signOut} = useAuth();
   const [myPosition, setMyPosition] = useState<[number,number]>([0,0]);
   const [risks, setRisks] = useState<Risk []>([]);
 
@@ -79,8 +82,20 @@ const Home: React.FC = () => {
         <div id="title">
           <h1>Área de risco</h1>
         </div>
-        <Redirectbutton to="login">Login</Redirectbutton>
-        <Redirectbutton to="register">Registrar</Redirectbutton>
+        {
+          !user ? (
+            <>
+              <Redirectbutton to="login">Login</Redirectbutton>
+              <Redirectbutton to="register">Registrar</Redirectbutton>
+            </>
+          ) : (
+            <>
+              <Redirectbutton to="register">{user.name}<FiUser /></Redirectbutton>
+              <Redirectbutton to="register">Registrar Area de Risco</Redirectbutton>
+              <Redirectbutton to="/" onClick={signOut}>Logout<FiLogOut /></Redirectbutton>
+            </>
+          )
+        }
       </Nav>
       <main>
         <Search>
@@ -106,6 +121,10 @@ const Home: React.FC = () => {
                 attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+                <Marker position={myPosition}
+                    icon={myLocation}>
+                    <Popup>Minha posição</Popup>
+                </Marker>
               {
                 risks ? risks.map(risk =>
                   (
@@ -114,15 +133,12 @@ const Home: React.FC = () => {
                     icon = {
                       iconPoint(risk.risk.toLocaleLowerCase())
                     }>
-                      <Popup> Atualizo</Popup>
+                      <Popup> Atualizo 6666</Popup>
                     </Marker>
                   )
                 )
                 :(
-                  <Marker position={myPosition}
-                    icon={myLocation}>
-                    <Popup>Minha posição</Popup>
-                  </Marker>
+                  <Marker position={[-19.9419331, -44.262343]}/>
                 )
               }
             </Map>

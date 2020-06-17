@@ -10,8 +10,15 @@ export const Redirectbutton = styled(Link)`
   align-self: center;
   padding: 10px 30px;
 
-  &&:hover {
+  display: flex;
+  align-items: center;
+
+  &:hover {
     background: #E0AC3A;
+  }
+
+  svg {
+    margin-left: 4px;
   }
 `;
 
