@@ -84,7 +84,7 @@ const Home: React.FC = () => {
             </>
           ) : (
             <>
-              <Redirectbutton to="register">{user.name}<FiUser /></Redirectbutton>
+              <span style={{ display: 'flex', alignSelf: 'center', paddingRight: '10px' }}>{user.name}<FiUser style={{ alignSelf: 'center' }} size={20} /></span>
               <Redirectbutton to="/register/target">Registrar Area de Risco<FiTarget /></Redirectbutton>
               <Redirectbutton to="/" onClick={signOut}>Logout<FiLogOut /></Redirectbutton>
             </>

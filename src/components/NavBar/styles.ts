@@ -18,4 +18,10 @@ export const Nav = styled.div`
 
     flex: 1;
   }
+
+  span {
+    svg {
+      margin-left: 5px;
+    }
+  }
 `;
