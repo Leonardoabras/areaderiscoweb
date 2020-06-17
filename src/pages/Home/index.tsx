@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/AuthContext';
 
 import { Map, TileLayer, Marker } from 'react-leaflet';
