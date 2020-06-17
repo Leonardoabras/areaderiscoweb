@@ -20,9 +20,6 @@ interface Risk{
   risk:string,
   local:string
 }
-interface Alt{
-
-}
 
 const Home: React.FC = () => {
 
