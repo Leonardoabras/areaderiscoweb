@@ -70,8 +70,8 @@ const Home: React.FC = () => {
     .then(response => {
       console.log(response.data);
       const {latt, longt} = response.data;
-      setBetimPosition([latt, longt])
-      setZoom(15)
+      setBetimPosition([latt, longt]);
+      setZoom(13);
     });
 
   };
