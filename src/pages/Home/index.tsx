@@ -1,20 +1,68 @@
-import React from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { useAuth } from '../../hooks/AuthContext';
 
-import { Map, TileLayer } from 'react-leaflet';
+import { Map, TileLayer, Marker } from 'react-leaflet';
+import L from 'leaflet';
 import { Nav, Search, MapSection, News, Redirectbutton } from './styles';
 import { FiLogOut, FiUser } from 'react-icons/fi';
 
 import Footer from '../../components/Footer';
-
+import api from '../../services/api';
 import logo from '../../assets/globe.png';
-import chuvaIcon from '../../assets/guarda.png';
+import chuvaIcon from '../../assets/umbrella.png';
 import desastreIcon from '../../assets/desastre.png';
 import riskIcon from '../../assets/risk.png';
+
+interface Risk{
+  id:number,
+  latitude:number,
+  longitude:number,
+  risk:string,
+}
 
 const Home: React.FC = () => {
 
   const {user, signOut} = useAuth();
+
+  const [risks, setRisks] = useState<Risk []>([]);
+
+  useEffect(()=>{
+   api.get('location').then(response =>{
+     console.log(response.data)
+      setRisks(response.data);
+    })
+  },[]);
+
+  function iconPoint(icon:string){
+
+    if( icon === 'desastre'){
+      var iconDesastre = L.icon({
+        iconUrl: desastreIcon,
+        iconSize: [55,55]
+      });
+
+      return iconDesastre;
+    }
+
+    if( icon === 'risco'){
+      const iconRisk = L.icon({
+        iconUrl: riskIcon,
+        iconSize: [55,55]
+      });
+
+      return iconRisk;
+    }
+
+    if( icon === 'chuva'){
+      const iconChuva = L.icon({
+        iconUrl: chuvaIcon,
+        iconSize: [55,55]
+      });
+
+      return iconChuva;
+    }
+
+  }
 
   return (
     <>
@@ -62,7 +110,19 @@ const Home: React.FC = () => {
                 attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+              {
+                risks ? risks.map(risk =>
+                  ( <Marker key={risk.id} position={[risk.latitude, risk.longitude]} icon = {
+                    iconPoint(risk.risk.toLocaleLowerCase())
+                  }
+                  />)
+                )
+                :(<Marker position={[0,0]}/>)
+              }
+
             </Map>
+
+
           </div>
 
           <div id="legenda">
