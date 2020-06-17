@@ -1,7 +1,9 @@
 import React from 'react';
+import { useAuth } from '../../hooks/AuthContext';
 
 import { Map, TileLayer } from 'react-leaflet';
 import { Nav, Search, MapSection, News, Redirectbutton } from './styles';
+import { FiLogOut, FiUser } from 'react-icons/fi';
 
 import Footer from '../../components/Footer';
 
@@ -11,6 +13,9 @@ import desastreIcon from '../../assets/desastre.png';
 import riskIcon from '../../assets/risk.png';
 
 const Home: React.FC = () => {
+
+  const {user, signOut} = useAuth();
+
   return (
     <>
       <Nav>
@@ -18,8 +23,20 @@ const Home: React.FC = () => {
         <div id="title">
           <h1>Área de risco</h1>
         </div>
-        <Redirectbutton to="login">Login</Redirectbutton>
-        <Redirectbutton to="register">Registrar</Redirectbutton>
+        {
+          !user ? (
+            <>
+              <Redirectbutton to="login">Login</Redirectbutton>
+              <Redirectbutton to="register">Registrar</Redirectbutton>
+            </>
+          ) : (
+            <>
+              <Redirectbutton to="register">{user.name}<FiUser /></Redirectbutton>
+              <Redirectbutton to="register">Registrar Area de Risco</Redirectbutton>
+              <Redirectbutton to="/" onClick={signOut}>Logout<FiLogOut /></Redirectbutton>
+            </>
+          )
+        }
       </Nav>
       <main>
         <Search>

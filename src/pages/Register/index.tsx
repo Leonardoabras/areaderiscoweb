@@ -1,13 +1,16 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
+import { useAuth } from '../../hooks/AuthContext';
 
 import logo from '../../assets/globe.png';
 import { Nav, GoBack, FormSection } from './styles';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import Footer from '../../components/Footer';
 
 import { FaArrowLeft } from 'react-icons/fa';
 import { FiLogIn } from 'react-icons/fi';
+
+import api from '../../services/api';
 
 interface IData {
   name: string;
@@ -17,8 +20,10 @@ interface IData {
 }
 
 const Login: React.FC = () => {
+  const history = useHistory();
 
-  const [passwordEquals, setPasswordEquals] = useState(false);
+  const {user} = useAuth();
+
   const [formData, setFormData] = useState<IData>({
     name: '',
     email: '',
@@ -26,22 +31,48 @@ const Login: React.FC = () => {
     cPassword: '',
   });
 
-  const handleDataInput = (event: ChangeEvent<HTMLInputElement>) => {
-    if(event.target.name === 'password' || event.target.name === 'cPassword') {
-      handleConfirmPassword();
+  useEffect(() => {
+    if(user){
+      history.push('/');
     }
-    setFormData({ ...formData, [event.target.name]: event.target.value });
-  };
+  }, [user, history])
 
-  const handleConfirmPassword = () => {
-    formData.password === formData.cPassword ?
-    setPasswordEquals(true) : setPasswordEquals(false);
+  const handleDataInput = (event: ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
 
     const { name, email, password, cPassword } = formData;
+
+    if(
+      name === '' ||
+      email === '' ||
+      password === '' ||
+      cPassword === ''
+    ) {
+      alert('Erro: Preencha todos os campos e tente novamente.');
+    }
+    else {
+      if(password !== cPassword) {
+        alert('Erro: As senhas não se coincidem, tente novamente.');
+      }
+      else {
+        const data: Omit<IData, 'cPassword'> = { name, email, password };
+
+        api.post('/user', data).then(res => {
+          if(res.status === 200) {
+            alert('Conta criada com sucesso');
+
+            history.push('/login');
+          }
+          else if(res.status === 400) {
+            alert('Erro: Failed on data validation.');
+          }
+        });
+      }
+    }
   };
 
   return (
@@ -61,7 +92,7 @@ const Login: React.FC = () => {
           <div className="title">
             <h1>Registrar</h1>
           </div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="fieldGroup">
               <div className="fieldItem">
                 <label htmlFor="name">Nome</label>
@@ -97,7 +128,7 @@ const Login: React.FC = () => {
                 <label htmlFor="name">Confirme sua senha</label>
                 <input
                   type="password"
-                  name="cpassword"
+                  name="cPassword"
                   value={formData.cPassword}
                   onChange={handleDataInput}
                 />
