@@ -1,5 +1,5 @@
-import React,{useEffect, useState, ChangeEvent} from 'react';
-import { Map, TileLayer,Marker , } from 'react-leaflet';
+import React,{useEffect, useState} from 'react';
+import { Map, TileLayer,Marker, Popup , } from 'react-leaflet';
 import L from 'leaflet';
 import { Nav, Search, MapSection, News, Redirectbutton } from './styles';
 
@@ -9,9 +9,7 @@ import logo from '../../assets/globe.png';
 import chuvaIcon from '../../assets/umbrella.png';
 import desastreIcon from '../../assets/desastre.png';
 import riskIcon from '../../assets/risk.png';
-
-
-
+import myLocationIcon from '../../assets/pin.png';
 
 interface Risk{
   id:number,
@@ -22,8 +20,18 @@ interface Risk{
 
 const Home: React.FC = () => {
 
-
+  const [myPosition, setMyPosition] = useState<[number,number]>([0,0]);
   const [risks, setRisks] = useState<Risk []>([]);
+
+
+  useEffect(()=>{
+    navigator.geolocation.getCurrentPosition(position =>{
+        const {latitude, longitude} = position.coords;
+
+        setMyPosition([latitude, longitude]);
+    });
+  },[]);
+
 
   useEffect(()=>{
    api.get('location').then(response =>{
@@ -32,42 +40,37 @@ const Home: React.FC = () => {
     })
   },[]);
 
-
+  const myLocation = L.icon({
+    iconUrl: myLocationIcon,
+    iconSize: [55,55]
+  });
 
   function iconPoint(icon:string){
-
+    const size: [number,number] = [50,50];
     if( icon === 'desastre'){
       var iconDesastre = L.icon({
         iconUrl: desastreIcon,
-        iconSize: [55,55]
+        iconSize: size
       });
-
       return iconDesastre;
     }
 
     if( icon === 'risco'){
       const iconRisk = L.icon({
         iconUrl: riskIcon,
-        iconSize: [55,55]
+        iconSize: size
       });
-
-
       return iconRisk;
     }
 
     if( icon === 'chuva'){
       const iconChuva = L.icon({
         iconUrl: chuvaIcon,
-        iconSize: [55,55]
+        iconSize: size
       });
-
-
       return iconChuva;
     }
-
   }
-
-
 
   return (
     <>
@@ -105,20 +108,25 @@ const Home: React.FC = () => {
                 />
               {
                 risks ? risks.map(risk =>
-                  ( <Marker key={risk.id} position={[risk.latitude, risk.longitude]} icon = {
-                    iconPoint(risk.risk.toLocaleLowerCase())
-                  }
-
-                  />)
+                  (
+                    <Marker key={risk.id}
+                    position={[risk.latitude, risk.longitude]}
+                    icon = {
+                      iconPoint(risk.risk.toLocaleLowerCase())
+                    }>
+                      <Popup> Atualizo</Popup>
+                    </Marker>
+                  )
                 )
-                :(<Marker position={[0,0]}/>)
+                :(
+                  <Marker position={myPosition}
+                    icon={myLocation}>
+                    <Popup>Minha posição</Popup>
+                  </Marker>
+                )
               }
-
             </Map>
-
-
           </div>
-
           <div id="legenda">
             <span>Legenda dos ícones</span>
             <p>Abaixo está a legenda dos ícones usados no mapa, para a orientação.</p>
