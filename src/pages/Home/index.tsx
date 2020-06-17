@@ -3,12 +3,12 @@ import { useAuth } from '../../hooks/AuthContext';
 
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
-import { Nav, Search, MapSection, News, Redirectbutton } from './styles';
-import { FiLogOut, FiUser } from 'react-icons/fi';
+import { Search, MapSection, News, Redirectbutton } from './styles';
+import { FiLogOut, FiUser, FiTarget } from 'react-icons/fi';
 
+import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import api from '../../services/api';
-import logo from '../../assets/globe.png';
 import chuvaIcon from '../../assets/umbrella.png';
 import desastreIcon from '../../assets/desastre.png';
 import riskIcon from '../../assets/risk.png';
@@ -21,20 +21,17 @@ interface Risk{
 }
 
 const Home: React.FC = () => {
-
   const {user, signOut} = useAuth();
 
   const [risks, setRisks] = useState<Risk []>([]);
 
   useEffect(()=>{
-   api.get('location').then(response =>{
-     console.log(response.data)
+    api.get('location').then(response =>{
       setRisks(response.data);
-    })
+    });
   },[]);
 
   function iconPoint(icon:string){
-
     if( icon === 'desastre'){
       var iconDesastre = L.icon({
         iconUrl: desastreIcon,
@@ -61,16 +58,11 @@ const Home: React.FC = () => {
 
       return iconChuva;
     }
-
   }
 
   return (
     <>
-      <Nav>
-        <img src={logo} alt="Area de risco" />
-        <div id="title">
-          <h1>Área de risco</h1>
-        </div>
+      <NavBar>
         {
           !user ? (
             <>
@@ -80,17 +72,17 @@ const Home: React.FC = () => {
           ) : (
             <>
               <Redirectbutton to="register">{user.name}<FiUser /></Redirectbutton>
-              <Redirectbutton to="register">Registrar Area de Risco</Redirectbutton>
+              <Redirectbutton to="/register/target">Registrar Area de Risco<FiTarget /></Redirectbutton>
               <Redirectbutton to="/" onClick={signOut}>Logout<FiLogOut /></Redirectbutton>
             </>
           )
         }
-      </Nav>
+      </NavBar>
       <main>
         <Search>
           <span>Saiba se você está em uma área de risco com apenas um passo.</span>
           <form>
-            <input placeholder="Busque pelo endereço" />
+            <input placeholder="Busque pelo seu CEP" />
             <button type="submit">Buscar</button>
           </form>
         </Search>
@@ -111,15 +103,12 @@ const Home: React.FC = () => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
               {
-                risks ? risks.map(risk =>
-                  ( <Marker key={risk.id} position={[risk.latitude, risk.longitude]} icon = {
+                risks ? risks.map(risk => (
+                  <Marker key={risk.id} position={[risk.latitude, risk.longitude]} icon = {
                     iconPoint(risk.risk.toLocaleLowerCase())
-                  }
-                  />)
-                )
-                :(<Marker position={[0,0]}/>)
+                  }/>
+                )) : (<Marker position={[0,0]}/>)
               }
-
             </Map>
 
 

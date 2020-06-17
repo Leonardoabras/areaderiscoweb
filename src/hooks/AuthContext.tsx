@@ -19,6 +19,7 @@ interface User {
 
 interface AuthContextData {
   user: User;
+  token: string;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
 }
@@ -26,6 +27,7 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({children}) => {
+
   const [data, setData] = useState<AuthState>(() => {
     const token = localStorage.getItem('@AreaDeRisco:token');
     const user = localStorage.getItem('@AreaDeRisco:user');
@@ -38,17 +40,21 @@ export const AuthProvider: React.FC = ({children}) => {
   });
 
   const signIn = useCallback(async ({email, password}) => {
-    const res = await api.post('login', {
-      email,
-      password,
-    });
+    try {
+      const res = await api.post('login', {
+        email,
+        password,
+      });
 
-    const { token, user } = res.data;
+      const { token, user } = res.data;
 
-    localStorage.setItem('@AreaDeRisco:token', token);
-    localStorage.setItem('@AreaDeRisco:user', JSON.stringify(user));
+      localStorage.setItem('@AreaDeRisco:token', token);
+      localStorage.setItem('@AreaDeRisco:user', JSON.stringify(user));
 
-    setData({ token, user });
+      setData({ token, user });
+    } catch (e) {
+      alert('Failed on data validation');
+    }
   }, []);
 
   const signOut = useCallback(() => {
@@ -59,7 +65,7 @@ export const AuthProvider: React.FC = ({children}) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user: data.user, token: data.token, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

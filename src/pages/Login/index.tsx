@@ -1,10 +1,10 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { useAuth } from '../../hooks/AuthContext';
 
-import logo from '../../assets/globe.png';
-import { Nav, GoBack, FormSection } from './styles';
+import { GoBack, FormSection } from './styles';
 import { Link, useHistory } from 'react-router-dom';
 
+import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 
 import { FaArrowLeft } from 'react-icons/fa';
@@ -36,7 +36,7 @@ const Register: React.FC = () => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     const { email, password } = formData;
@@ -50,23 +50,18 @@ const Register: React.FC = () => {
     else {
       const data: IData = { email, password };
 
-      signIn(data);
-      history.push('/');
+      await signIn(data);
     }
   };
 
   return (
     <>
-      <Nav>
-        <img src={logo} alt="Area de risco" />
-        <div id="title">
-          <h1>Área de risco</h1>
-        </div>
+      <NavBar>
         <GoBack to="/">
           <FaArrowLeft />
           <span>Início</span>
         </GoBack>
-      </Nav>
+      </NavBar>
       <main style={{ display: 'flex', flexDirection: 'column' }}>
         <FormSection>
           <div className="title">
